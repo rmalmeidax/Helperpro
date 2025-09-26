@@ -1,711 +1,312 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:image_picker/image_picker.dart';
-import 'dart:io';
+import 'package:google_fonts/google_fonts.dart';
 
-/// Widget principal do formulário de registro profissional
-/// Implementa o design conforme a imagem fornecida
 class FrmRegistroProfissionalWidget extends StatefulWidget {
   const FrmRegistroProfissionalWidget({super.key});
 
+  static String routeName = 'FrmRegistroProfissional';
+  static String routePath = '/frmRegistroProfissional';
+
   @override
-  State<FrmRegistroProfissionalWidget> createState() => _FrmRegistroProfissionalWidgetState();
+  State<FrmRegistroProfissionalWidget> createState() =>
+      _FrmRegistroProfissionalWidgetState();
 }
 
-class _FrmRegistroProfissionalWidgetState extends State<FrmRegistroProfissionalWidget> {
-  // Chave global do formulário para validação
-  final _formKey = GlobalKey<FormState>();
+class _FrmRegistroProfissionalWidgetState
+    extends State<FrmRegistroProfissionalWidget> {
+  final scaffoldKey = GlobalKey<ScaffoldState>();
 
-  // Controladores dos campos de texto
-  final _nomeController = TextEditingController();
-  final _enderecoController = TextEditingController();
-  final _cidadeController = TextEditingController();
-  final _cepController = TextEditingController();
-  final _estadoController = TextEditingController();
-  final _telefoneController = TextEditingController();
-  final _empresaController = TextEditingController();
-  final _cnpjController = TextEditingController();
-  final _dataEmissaoController = TextEditingController();
-  final _workCompensationController = TextEditingController();
-  final _validadeController = TextEditingController();
+  // Text controllers
+  final TextEditingController workCompController = TextEditingController();
+  final TextEditingController validadeController = TextEditingController();
+  final TextEditingController seguro1Controller = TextEditingController();
+  final TextEditingController seguro2Controller = TextEditingController();
+  final TextEditingController seguro3Controller = TextEditingController();
 
-  // Variáveis para controle de estado
-  File? _imagemPerfil;
-  final ImagePicker _picker = ImagePicker();
-  String? _qualificacaoSelecionada;
+  // Focus nodes
+  final FocusNode workCompFocusNode = FocusNode();
+  final FocusNode validadeFocusNode = FocusNode();
+  final FocusNode seguro1FocusNode = FocusNode();
+  final FocusNode seguro2FocusNode = FocusNode();
+  final FocusNode seguro3FocusNode = FocusNode();
 
-  // Lista de qualificações disponíveis
-  final List<String> _qualificacoes = [
-    'Desenvolvedor Flutter',
-    'Designer UI/UX',
-    'Desenvolvedor Web',
-    'Desenvolvedor Mobile',
-    'Analista de Sistemas',
-    'Gerente de Projetos',
-    'DevOps',
-    'Teste de Software',
-    'Arquiteto de Software',
-    'Consultor Técnico'
-  ];
+  // Dropdown values
+  String seguro1Valor = 'Valor Apolice';
+  String seguro2Valor = 'Valor Apolice';
+  String seguro3Valor = 'Valor Apolice';
 
-  /// Função para selecionar imagem da galeria ou câmera
-  Future<void> _selecionarImagem() async {
-    showModalBottomSheet(
-      context: context,
-      backgroundColor: Colors.transparent,
-      builder: (BuildContext context) {
-        return Container(
-          decoration: const BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(20),
-              topRight: Radius.circular(20),
-            ),
-          ),
-          child: SafeArea(
-            child: Wrap(
-              children: [
-                ListTile(
-                  leading: const Icon(Icons.photo_library, color: Colors.black),
-                  title: const Text('Galeria', style: TextStyle(color: Colors.black)),
-                  onTap: () async {
-                    Navigator.of(context).pop();
-                    final XFile? imagem = await _picker.pickImage(source: ImageSource.gallery);
-                    if (imagem != null) {
-                      setState(() {
-                        _imagemPerfil = File(imagem.path);
-                      });
-                    }
-                  },
-                ),
-                ListTile(
-                  leading: const Icon(Icons.photo_camera, color: Colors.black),
-                  title: const Text('Câmera', style: TextStyle(color: Colors.black)),
-                  onTap: () async {
-                    Navigator.of(context).pop();
-                    final XFile? imagem = await _picker.pickImage(source: ImageSource.camera);
-                    if (imagem != null) {
-                      setState(() {
-                        _imagemPerfil = File(imagem.path);
-                      });
-                    }
-                  },
-                ),
-              ],
-            ),
-          ),
-        );
-      },
+  // Checkbox states
+  Map<String, bool> qualificacoes = {
+    "Drywall": false,
+    "Madeira": false,
+    "Encanador": false,
+    "Pintura": false,
+    "Frame": false,
+    "Tile": false,
+    "Tile Piscina": false,
+    "Roof": false,
+    "Brick": false,
+  };
+
+  @override
+  void dispose() {
+    workCompController.dispose();
+    validadeController.dispose();
+    seguro1Controller.dispose();
+    seguro2Controller.dispose();
+    seguro3Controller.dispose();
+
+    workCompFocusNode.dispose();
+    validadeFocusNode.dispose();
+    seguro1FocusNode.dispose();
+    seguro2FocusNode.dispose();
+    seguro3FocusNode.dispose();
+
+    super.dispose();
+  }
+
+  void _salvarProfissional() {
+    // Implementar lógica de salvamento aqui
+    print('Salvando profissional...');
+    print('Work Compensation: ${workCompController.text}');
+    print('Validade: ${validadeController.text}');
+    print('Seguro 1: $seguro1Valor');
+    print('Seguro 2: $seguro2Valor');
+    print('Seguro 3: $seguro3Valor');
+    print('Qualificações: $qualificacoes');
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text('Profissional salvo com sucesso!'),
+        backgroundColor: Colors.blueGrey,
+      ),
     );
   }
 
-  /// Widget personalizado para criar campos de texto com o estilo da imagem
-  Widget _buildCustomTextField({
-    required TextEditingController controller,
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      key: scaffoldKey,
+      backgroundColor: Colors.black87,
+      appBar: AppBar(
+        backgroundColor: Colors.teal,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () => Navigator.of(context).pop(),
+        ),
+        title: const Text("Registro Profissional"),
+        centerTitle: true,
+      ),
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Work Compensation
+            _buildTextField(
+              label: 'Work Compensation',
+              controller: workCompController,
+              focusNode: workCompFocusNode,
+            ),
+            const SizedBox(height: 16),
+            // Validade
+            _buildTextField(
+              label: 'Validade',
+              controller: validadeController,
+              focusNode: validadeFocusNode,
+            ),
+            const SizedBox(height: 24),
+            // Seguro
+            Text(
+              'Seguro',
+              style: GoogleFonts.inter(
+                color: Colors.tealAccent,
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            const SizedBox(height: 8),
+            _buildSeguroRow('Apolice 1', seguro1Valor, (value) {
+              setState(() {
+                seguro1Valor = value!;
+              });
+            }),
+            const SizedBox(height: 8),
+            _buildSeguroRow('Apolice 2', seguro2Valor, (value) {
+              setState(() {
+                seguro2Valor = value!;
+              });
+            }),
+            const SizedBox(height: 8),
+            _buildSeguroRow('Apolice 3', seguro3Valor, (value) {
+              setState(() {
+                seguro3Valor = value!;
+              });
+            }),
+            const SizedBox(height: 24),
+            // Qualificação
+            Text(
+              'Qualificação',
+              style: GoogleFonts.inter(
+                color: Colors.tealAccent,
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            const SizedBox(height: 8),
+            _buildQualificacaoGrid(),
+            const SizedBox(height: 32),
+            Center(
+              child: SizedBox(
+                width: double.infinity,
+                height: 48,
+                child: ElevatedButton(
+                  onPressed: _salvarProfissional,
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.teal,
+                    foregroundColor: Colors.white,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                  ),
+                  child: Text(
+                    'SALVAR',
+                    style: GoogleFonts.inter(
+                        fontSize: 16, fontWeight: FontWeight.w600),
+                  ),
+                ),
+              ),
+            ),
+            const SizedBox(height: 20),
+          ],
+        ),
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        backgroundColor: Colors.teal,
+        selectedItemColor: Colors.white,
+        unselectedItemColor: Colors.white70,
+        currentIndex: 0,
+        items: const [
+          BottomNavigationBarItem(icon: Icon(Icons.person), label: "Perfil"),
+          BottomNavigationBarItem(icon: Icon(Icons.home), label: "Home"),
+        ],
+      ),
+    );
+  }
+
+  // Campos de texto
+  Widget _buildTextField({
     required String label,
-    required String placeholder,
-    TextInputType keyboardType = TextInputType.text,
-    List<TextInputFormatter>? inputFormatters,
-    String? Function(String?)? validator,
-    bool enabled = true,
+    required TextEditingController controller,
+    required FocusNode focusNode,
+    int maxLines = 1,
   }) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
           label,
-          style: const TextStyle(
-            color: Colors.black,
+          style: GoogleFonts.inter(
+            color: Colors.white,
             fontSize: 14,
             fontWeight: FontWeight.w500,
           ),
         ),
         const SizedBox(height: 8),
-        TextFormField(
+        TextField(
           controller: controller,
-          keyboardType: keyboardType,
-          inputFormatters: inputFormatters,
-          validator: validator,
-          enabled: enabled,
-          style: const TextStyle(color: Colors.black),
+          focusNode: focusNode,
+          maxLines: maxLines,
+          style: GoogleFonts.inter(color: Colors.white),
           decoration: InputDecoration(
-            hintText: placeholder,
-            hintStyle: TextStyle(color: Colors.grey.shade600),
             filled: true,
-            fillColor: Colors.grey.shade200,
+            fillColor: Colors.grey[900],
             border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12),
-              borderSide: BorderSide(color: Colors.grey.shade400),
+              borderRadius: BorderRadius.circular(8),
             ),
-            enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12),
-              borderSide: BorderSide(color: Colors.grey.shade400),
-            ),
-            focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12),
-              borderSide: const BorderSide(color: Color(0xFF4FD1C7), width: 2),
-            ),
-            errorBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12),
-              borderSide: const BorderSide(color: Colors.red),
-            ),
-            focusedErrorBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12),
-              borderSide: const BorderSide(color: Colors.red),
-            ),
-            contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
           ),
         ),
       ],
     );
   }
 
-  /// Widget para o dropdown de qualificação
-  Widget _buildQualificacaoDropdown() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const Text(
-          'Qualificação',
-          style: TextStyle(
-            color: Colors.black,
-            fontSize: 14,
-            fontWeight: FontWeight.w500,
-          ),
-        ),
-        const SizedBox(height: 8),
-        DropdownButtonFormField<String>(
-          value: _qualificacaoSelecionada,
-          style: const TextStyle(color: Colors.black),
-          dropdownColor: Colors.white,
-          decoration: InputDecoration(
-            hintText: 'Qualificação',
-            hintStyle: TextStyle(color: Colors.grey.shade600),
-            filled: true,
-            fillColor: Colors.grey.shade200,
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12),
-              borderSide: BorderSide(color: Colors.grey.shade400),
-            ),
-            enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12),
-              borderSide: BorderSide(color: Colors.grey.shade400),
-            ),
-            focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12),
-              borderSide: const BorderSide(color: Color(0xFF4FD1C7), width: 2),
-            ),
-            contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-          ),
-          icon: const Icon(Icons.keyboard_arrow_down, color: Colors.black),
-          items: _qualificacoes.map((String qualificacao) {
-            return DropdownMenuItem<String>(
-              value: qualificacao,
-              child: Text(qualificacao, style: const TextStyle(color: Colors.black)),
-            );
-          }).toList(),
-          onChanged: (String? newValue) {
-            setState(() {
-              _qualificacaoSelecionada = newValue;
-            });
-          },
-        ),
-      ],
-    );
-  }
-
-  /// Widget para campos em linha (lado a lado)
-  Widget _buildRowFields({
-    required Widget field1,
-    required Widget field2,
-    double spacing = 12,
-  }) {
+  // Dropdown Seguro
+  Widget _buildSeguroRow(String label, String valor, ValueChanged<String?> onChanged) {
     return Row(
       children: [
-        Expanded(child: field1),
-        SizedBox(width: spacing),
-        Expanded(child: field2),
-      ],
-    );
-  }
-
-  /// Widget para campos em linha com 3 elementos
-  Widget _buildTripleRowFields({
-    required Widget field1,
-    required Widget field2,
-    required Widget field3,
-    double spacing = 12,
-  }) {
-    return Row(
-      children: [
-        Expanded(child: field1),
-        SizedBox(width: spacing),
-        Expanded(child: field2),
-        SizedBox(width: spacing),
-        Expanded(child: field3),
-      ],
-    );
-  }
-
-  /// Widget para botões com ícone azul
-  Widget _buildIconButton({
-    required VoidCallback onPressed,
-    required IconData icon,
-  }) {
-    return Container(
-      width: 50,
-      height: 50,
-      decoration: BoxDecoration(
-        color: const Color(0xFF4FD1C7),
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: IconButton(
-        onPressed: onPressed,
-        icon: Icon(icon, color: Colors.white),
-      ),
-    );
-  }
-
-  /// Função para salvar os dados do profissional
-  void _salvarProfissional() {
-    if (_formKey.currentState!.validate()) {
-      // Validação adicional para qualificação
-      if (_qualificacaoSelecionada == null) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Selecione uma qualificação!'),
-            backgroundColor: Colors.red,
+        Expanded(
+          flex: 2,
+          child: Text(
+            label,
+            style: GoogleFonts.inter(color: Colors.white70),
           ),
-        );
-        return;
-      }
-
-      // Aqui você salvaria os dados do profissional
-      // Por exemplo, em um banco de dados ou lista
-
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Profissional cadastrado com sucesso!'),
-          backgroundColor: Colors.green,
         ),
-      );
-
-      // Limpar formulário após salvar
-      _limparFormulario();
-    }
-  }
-
-  /// Função para limpar todos os campos do formulário
-  void _limparFormulario() {
-    _nomeController.clear();
-    _enderecoController.clear();
-    _cidadeController.clear();
-    _cepController.clear();
-    _estadoController.clear();
-    _telefoneController.clear();
-    _empresaController.clear();
-    _cnpjController.clear();
-    _dataEmissaoController.clear();
-    _workCompensationController.clear();
-    _validadeController.clear();
-
-    setState(() {
-      _imagemPerfil = null;
-      _qualificacaoSelecionada = null;
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      // AppBar com gradiente turquesa conforme a imagem
-      appBar: AppBar(
-        title: const Text(""),
-        backgroundColor: const Color(0xFF4FD1C7),
-        foregroundColor: Colors.white,
-        elevation: 0,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.white),
-          onPressed: () => Navigator.of(context).pop(),
-        ),
-      ),
-      // Body com fundo branco
-      body: Container(
-        decoration: const BoxDecoration(
-          color: Colors.white,
-        ),
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.all(20.0),
-          child: Form(
-            key: _formKey,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                // Seção do avatar e botão trocar foto
-                Center(
-                  child: Column(
-                    children: [
-                      // Ícone de perfil
-                      Container(
-                        width: 80,
-                        height: 80,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: Colors.grey.shade200,
-                          border: Border.all(
-                            color: Colors.grey.shade400,
-                            width: 2,
-                          ),
-                        ),
-                        child: _imagemPerfil != null
-                            ? ClipOval(
-                          child: Image.file(
-                            _imagemPerfil!,
-                            width: 80,
-                            height: 80,
-                            fit: BoxFit.cover,
-                          ),
-                        )
-                            : const Icon(
-                          Icons.person_add,
-                          size: 40,
-                          color: Colors.grey,
-                        ),
-                      ),
-                      const SizedBox(height: 16),
-
-                      // Botão "Trocar Foto"
-                      ElevatedButton(
-                        onPressed: _selecionarImagem,
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.white,
-                          foregroundColor: Colors.black,
-                          side: BorderSide(color: Colors.grey.shade400),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(25),
-                          ),
-                          padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 12),
-                        ),
-                        child: const Text('Trocar Foto'),
-                      ),
-                    ],
-                  ),
-                ),
-
-                const SizedBox(height: 32),
-
-                // Campo Nome
-                _buildCustomTextField(
-                  controller: _nomeController,
-                  label: 'Nome',
-                  placeholder: '[display_name]',
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Por favor, insira o nome';
-                    }
-                    return null;
-                  },
-                ),
-
-                const SizedBox(height: 20),
-
-                // Campo Endereço
-                _buildCustomTextField(
-                  controller: _enderecoController,
-                  label: 'Endereço',
-                  placeholder: '[endereco]',
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Por favor, insira o endereço';
-                    }
-                    return null;
-                  },
-                ),
-
-                const SizedBox(height: 20),
-
-                // Campos Cidade, CEP e Estado em linha
-                _buildTripleRowFields(
-                  field1: _buildCustomTextField(
-                    controller: _cidadeController,
-                    label: 'Cidade',
-                    placeholder: '[cidade]',
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Insira a cidade';
-                      }
-                      return null;
-                    },
-                  ),
-                  field2: _buildCustomTextField(
-                    controller: _cepController,
-                    label: 'ZipCode',
-                    placeholder: '[cep]',
-                    keyboardType: TextInputType.number,
-                    inputFormatters: [
-                      FilteringTextInputFormatter.digitsOnly,
-                      LengthLimitingTextInputFormatter(8),
-                    ],
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Insira o CEP';
-                      }
-                      return null;
-                    },
-                  ),
-                  field3: _buildCustomTextField(
-                    controller: _estadoController,
-                    label: 'Estado',
-                    placeholder: '[estado]',
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Insira o estado';
-                      }
-                      return null;
-                    },
-                  ),
-                ),
-
-                const SizedBox(height: 20),
-
-                // Campos Telefone e Qualificação em linha
-                _buildRowFields(
-                  field1: _buildCustomTextField(
-                    controller: _telefoneController,
-                    label: 'Telefone',
-                    placeholder: '[phone_number]',
-                    keyboardType: TextInputType.phone,
-                    inputFormatters: [
-                      FilteringTextInputFormatter.digitsOnly,
-                      LengthLimitingTextInputFormatter(11),
-                    ],
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Insira o telefone';
-                      }
-                      if (value.length < 10) {
-                        return 'Telefone inválido';
-                      }
-                      return null;
-                    },
-                  ),
-                  field2: _buildQualificacaoDropdown(),
-                ),
-
-                const SizedBox(height: 32),
-
-                // Seção "Dados Comerciais"
-                const Center(
-                  child: Text(
-                    'Dados Comerciais',
-                    style: TextStyle(
-                      color: Color(0xFF4FD1C7),
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-
-                const SizedBox(height: 24),
-
-                // Campo Companhia
-                _buildCustomTextField(
-                  controller: _empresaController,
-                  label: 'Companhia',
-                  placeholder: '[empresa]',
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Por favor, insira a empresa';
-                    }
-                    return null;
-                  },
-                ),
-
-                const SizedBox(height: 20),
-
-                // Campos CNPJ e Data de Emissão com botão
-                Row(
-                  children: [
-                    Expanded(
-                      child: _buildCustomTextField(
-                        controller: _cnpjController,
-                        label: 'EIN Number',
-                        placeholder: '[cnpj_emp]',
-                        keyboardType: TextInputType.number,
-                        inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Insira o CNPJ';
-                          }
-                          return null;
-                        },
-                      ),
-                    ),
-                    const SizedBox(width: 12),
-                    Expanded(
-                      child: _buildCustomTextField(
-                        controller: _dataEmissaoController,
-                        label: 'Emissão',
-                        placeholder: '[data_emp]',
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Insira a data';
-                          }
-                          return null;
-                        },
-                      ),
-                    ),
-                    const SizedBox(width: 12),
-                    _buildIconButton(
-                      onPressed: () {
-                        // Ação do primeiro botão azul
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                            content: Text('Primeiro botão pressionado!'),
-                            backgroundColor: Color(0xFF4FD1C7),
-                          ),
-                        );
-                      },
-                      icon: Icons.folder,
-                    ),
-                  ],
-                ),
-
-                const SizedBox(height: 20),
-
-                // Campos Work Compensation e Validade com botão
-                Row(
-                  children: [
-                    Expanded(
-                      child: _buildCustomTextField(
-                        controller: _workCompensationController,
-                        label: 'Work Compensati...',
-                        placeholder: '[work_compen]',
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Insira os dados';
-                          }
-                          return null;
-                        },
-                      ),
-                    ),
-                    const SizedBox(width: 12),
-                    Expanded(
-                      child: _buildCustomTextField(
-                        controller: _validadeController,
-                        label: 'Validade',
-                        placeholder: '[data_workser]',
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Insira a validade';
-                          }
-                          return null;
-                        },
-                      ),
-                    ),
-                    const SizedBox(width: 12),
-                    _buildIconButton(
-                      onPressed: () {
-                        // Ação do segundo botão azul
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                            content: Text('Segundo botão pressionado!'),
-                            backgroundColor: Color(0xFF4FD1C7),
-                          ),
-                        );
-                      },
-                      icon: Icons.folder,
-                    ),
-                  ],
-                ),
-
-                const SizedBox(height: 40),
-              ],
+        const SizedBox(width: 8),
+        Expanded(
+          flex: 3,
+          child: DropdownButtonFormField<String>(
+            value: valor,
+            items: const [
+              DropdownMenuItem(value: 'Valor Apolice', child: Text('Valor Apolice')),
+              DropdownMenuItem(value: 'Valor 1', child: Text('Valor 1')),
+              DropdownMenuItem(value: 'Valor 2', child: Text('Valor 2')),
+            ],
+            onChanged: onChanged,
+            decoration: InputDecoration(
+              filled: true,
+              fillColor: Colors.grey[900],
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(8),
+              ),
             ),
+            style: GoogleFonts.inter(color: Colors.white),
           ),
         ),
-      ),
+        const SizedBox(width: 8),
+        Container(
+          width: 40,
+          height: 40,
+          decoration: BoxDecoration(
+            color: Colors.teal,
+            borderRadius: BorderRadius.circular(8),
+          ),
+          child: const Icon(Icons.upload_file, color: Colors.white),
+        ),
+      ],
+    );
+  }
 
-      // Bottom Navigation Bar conforme a imagem
-      bottomNavigationBar: Container(
-        height: 80,
-        decoration: const BoxDecoration(
-          color: Color(0xFF4FD1C7),
-          borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(20),
-            topRight: Radius.circular(20),
-          ),
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+  // Checkboxes de Qualificação
+  Widget _buildQualificacaoGrid() {
+    return Wrap(
+      spacing: 16,
+      runSpacing: 8,
+      children: qualificacoes.keys.map((key) {
+        return Row(
+          mainAxisSize: MainAxisSize.min,
           children: [
-            // Botão Perfil (ativo)
-            Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Container(
-                  padding: const EdgeInsets.all(8),
-                  decoration: const BoxDecoration(
-                    color: Color(0xFF4FD1C7),
-                    shape: BoxShape.circle,
-                  ),
-                  child: const Icon(
-                    Icons.person,
-                    color: Colors.white,
-                    size: 24,
-                  ),
-                ),
-                const SizedBox(height: 4),
-                const Text(
-                  'Perfil',
-                  style: TextStyle(
-                    color: Color(0xFF4FD1C7),
-                    fontSize: 12,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-              ],
+            Checkbox(
+              value: qualificacoes[key],
+              onChanged: (value) {
+                setState(() {
+                  qualificacoes[key] = value!;
+                });
+              },
+              checkColor: Colors.white,
+              fillColor: MaterialStateProperty.all(Colors.teal),
             ),
-
-            // Botão Home
-            Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(
-                  Icons.home_outlined,
-                  color: Colors.white.withOpacity(0.6),
-                  size: 28,
-                ),
-                const SizedBox(height: 4),
-                Text(
-                  '',
-                  style: TextStyle(
-                    color: Colors.white.withOpacity(0.6),
-                    fontSize: 12,
-                  ),
-                ),
-              ],
+            Text(
+              key,
+              style: GoogleFonts.inter(color: Colors.white70),
+            ),
+            const SizedBox(width: 8),
+            const Text(
+              "Possui ferramenta",
+              style: TextStyle(color: Colors.white70),
             ),
           ],
-        ),
-      ),
+        );
+      }).toList(),
     );
-  }
-
-  /// Libera os recursos dos controladores quando o widget é destruído
-  @override
-  void dispose() {
-    _nomeController.dispose();
-    _enderecoController.dispose();
-    _cidadeController.dispose();
-    _cepController.dispose();
-    _estadoController.dispose();
-    _telefoneController.dispose();
-    _empresaController.dispose();
-    _cnpjController.dispose();
-    _dataEmissaoController.dispose();
-    _workCompensationController.dispose();
-    _validadeController.dispose();
-    super.dispose();
   }
 }

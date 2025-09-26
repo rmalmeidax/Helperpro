@@ -1,3 +1,4 @@
+
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -195,6 +196,8 @@ class _FrmLoginWidgetState extends State<FrmLoginWidget> {
 
                         try {
                           // TODO: autenticação real
+
+                          //Botão Access
                           Navigator.pushReplacement(
                             context,
                             MaterialPageRoute(
@@ -280,6 +283,8 @@ class _FrmLoginWidgetState extends State<FrmLoginWidget> {
                 Center(
                   child: ElevatedButton(
                     onPressed: () {
+
+                    // Botão Visitante
                       Navigator.pushReplacement(
                         context,
                         MaterialPageRoute(

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'FrmCadastroCliente.dart'; // import da tela que será aberta
+
 class FrmPrincipalWidget extends StatelessWidget {
   const FrmPrincipalWidget({super.key});
 
@@ -63,13 +65,57 @@ class FrmPrincipalWidget extends StatelessWidget {
               physics: const NeverScrollableScrollPhysics(),
               crossAxisSpacing: 10,
               mainAxisSpacing: 10,
-              children: const [
-                _QuickServiceCard(icon: Icons.people, label: "Clientes"),
-                _QuickServiceCard(icon: Icons.show_chart, label: "Atividade"),
-                _QuickServiceCard(icon: Icons.attach_money, label: "Movimentacao"),
-                _QuickServiceCard(icon: Icons.search, label: "Buscar"),
-                _QuickServiceCard(icon: Icons.calendar_month, label: "Agenda"),
-                _QuickServiceCard(icon: Icons.shopping_cart, label: "Compras"),
+              children: [
+                // Card Clientes - já funcional
+                _QuickServiceCard(
+                  icon: Icons.people,
+                  label: "Clientes",
+                  enabled: true,
+                  onTap: () {
+                    Navigator.pushNamed(context, '/frmCadastroCliente');
+                  },
+                ),
+                // Cards desativados (comentados com possível onTap)
+                _QuickServiceCard(
+                  icon: Icons.show_chart,
+                  label: "Atividade",
+                  enabled: true,
+                   onTap: () {
+                     Navigator.pushNamed(context, '/frmRegistroAgendaWidget');
+                   },
+                ),
+                _QuickServiceCard(
+                  icon: Icons.attach_money,
+                  label: "Movimentacao",
+                  enabled: false,
+                  // onTap: () {
+                  //   Navigator.pushNamed(context, '/frmMovimentacao');
+                  // },
+                ),
+                _QuickServiceCard(
+                  icon: Icons.search,
+                  label: "Buscar",
+                  enabled: true,
+                   onTap: () {
+                     Navigator.pushNamed(context, '/frmBuscaMapWidget');
+                   },
+                ),
+                _QuickServiceCard(
+                  icon: Icons.calendar_month,
+                  label: "Agenda",
+                  enabled: false,
+                  // onTap: () {
+                  //   Navigator.pushNamed(context, '/frmAgenda');
+                  // },
+                ),
+                _QuickServiceCard(
+                  icon: Icons.shopping_cart,
+                  label: "Compras",
+                  enabled: false,
+                  // onTap: () {
+                  //   Navigator.pushNamed(context, '/frmCompras');
+                  // },
+                ),
               ],
             ),
 
@@ -130,7 +176,6 @@ class FrmPrincipalWidget extends StatelessWidget {
         ),
       ),
 
-      // BottomNavigationBar
       bottomNavigationBar: BottomNavigationBar(
         backgroundColor: Colors.blue,
         selectedItemColor: Colors.white ,
@@ -145,27 +190,39 @@ class FrmPrincipalWidget extends StatelessWidget {
   }
 }
 
-// Widget para os cards de quick service
+// Quick Service Card
 class _QuickServiceCard extends StatelessWidget {
   final IconData icon;
   final String label;
+  final VoidCallback? onTap;
+  final bool enabled;
 
-  const _QuickServiceCard({required this.icon, required this.label});
+  const _QuickServiceCard({
+    required this.icon,
+    required this.label,
+    this.onTap,
+    this.enabled = true,
+  });
 
   @override
   Widget build(BuildContext context) {
     return Card(
-      color: Colors.grey[850],
+      color: enabled ? Colors.grey[850] : Colors.grey[700],
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       child: InkWell(
-        onTap: () {},
+        onTap: enabled ? onTap : null,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(icon, color: Colors.white, size: 28),
+            Icon(icon, color: Colors.white70, size: 28),
             const SizedBox(height: 8),
-            Text(label,
-                style: const TextStyle(color: Colors.white70, fontSize: 13)),
+            Text(
+              label,
+              style: TextStyle(
+                color: Colors.white70.withOpacity(enabled ? 1.0 : 0.5),
+                fontSize: 13,
+              ),
+            ),
           ],
         ),
       ),
