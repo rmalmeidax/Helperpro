@@ -53,7 +53,7 @@ class _FrmPesquisaAbaListaWidgetState
               itemBuilder: (context, index) {
                 final job = jobs[index];
                 return Card(
-                  color: Colors.teal[300],
+                  color: Colors.blueAccent,
                   margin: const EdgeInsets.symmetric(vertical: 4),
                   child: ListTile(
                     title: Text("Start: ${job['start']}"),
@@ -66,7 +66,7 @@ class _FrmPesquisaAbaListaWidgetState
           actions: [
             ElevatedButton(
               style:
-              ElevatedButton.styleFrom(backgroundColor: Colors.teal[600]),
+              ElevatedButton.styleFrom(backgroundColor: Colors.blueAccent),
               onPressed: () => Navigator.pop(context),
               child: const Text("Okay"),
             )

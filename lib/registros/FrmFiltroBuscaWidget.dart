@@ -222,7 +222,7 @@ class _FrmFiltroBuscaWidgetState extends State<FrmFiltroBuscaWidget>
                                       )
                                     ],
                                     gradient: const LinearGradient(
-                                      colors: [Color(0xFF00968A), Color(0xFFF2A384)],
+                                      colors: [Colors.white, Colors.blueAccent],
                                       stops: [0, 1],
                                       begin: AlignmentDirectional(0.94, -1),
                                       end: AlignmentDirectional(-0.94, 1),
@@ -471,7 +471,7 @@ class _FrmFiltroBuscaWidgetState extends State<FrmFiltroBuscaWidget>
                                 children: [
                                   Expanded(
                                     child: Slider(
-                                      activeColor: const Color(0xFF00968A),
+                                      activeColor: Colors.blueAccent,
                                       inactiveColor: Colors.grey[300],
                                       min: 0,
                                       max: 100,
@@ -502,7 +502,7 @@ class _FrmFiltroBuscaWidgetState extends State<FrmFiltroBuscaWidget>
                                 'Dados Comerciais',
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
-                                  color: const Color(0xFF00968A),
+                                  color: Colors.blueAccent,
                                   fontSize: 20,
                                   fontWeight: FontWeight.w600,
                                 ),
@@ -522,7 +522,7 @@ class _FrmFiltroBuscaWidgetState extends State<FrmFiltroBuscaWidget>
                                         checkboxValue1 = value!;
                                       });
                                     },
-                                    activeColor: const Color(0xFF00968A),
+                                    activeColor: Colors.blueAccent,
                                   ),
                                   const Padding(
                                     padding: EdgeInsetsDirectional.fromSTEB(0, 0, 40, 0),
@@ -535,7 +535,7 @@ class _FrmFiltroBuscaWidgetState extends State<FrmFiltroBuscaWidget>
                                         checkboxValue2 = value!;
                                       });
                                     },
-                                    activeColor: const Color(0xFF00968A),
+                                    activeColor: Colors.blueAccent,
                                   ),
                                   const Text('Work Compensation'),
                                 ],
@@ -549,7 +549,7 @@ class _FrmFiltroBuscaWidgetState extends State<FrmFiltroBuscaWidget>
                                         checkboxValue3 = value!;
                                       });
                                     },
-                                    activeColor: const Color(0xFF00968A),
+                                    activeColor: Colors.blueAccent,
                                   ),
                                   const Padding(
                                     padding: EdgeInsetsDirectional.fromSTEB(0, 0, 50, 0),
@@ -562,7 +562,7 @@ class _FrmFiltroBuscaWidgetState extends State<FrmFiltroBuscaWidget>
                                         checkboxValue4 = value!;
                                       });
                                     },
-                                    activeColor: const Color(0xFF00968A),
+                                    activeColor:  Colors.blueAccent,
                                   ),
                                   const Text('Liability'),
                                 ],
@@ -578,7 +578,7 @@ class _FrmFiltroBuscaWidgetState extends State<FrmFiltroBuscaWidget>
                                 'Qualificação',
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
-                                  color: const Color(0xFF00968A),
+                                  color: Colors.blueAccent,
                                   fontSize: 20,
                                   fontWeight: FontWeight.w600,
                                 ),
@@ -666,7 +666,7 @@ class _FrmFiltroBuscaWidgetState extends State<FrmFiltroBuscaWidget>
                                 'Licenças',
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
-                                  color: const Color(0xFF00968A),
+                                  color:  Colors.blueAccent,
                                   fontSize: 20,
                                   fontWeight: FontWeight.w600,
                                 ),
@@ -686,7 +686,7 @@ class _FrmFiltroBuscaWidgetState extends State<FrmFiltroBuscaWidget>
                                         checkboxValue5 = value!;
                                       });
                                     },
-                                    activeColor: const Color(0xFF00968A),
+                                    activeColor: Colors.blueAccent,
                                   ),
                                   const Padding(
                                     padding: EdgeInsetsDirectional.fromSTEB(0, 0, 10, 0),
@@ -699,7 +699,7 @@ class _FrmFiltroBuscaWidgetState extends State<FrmFiltroBuscaWidget>
                                         checkboxValue6 = value!;
                                       });
                                     },
-                                    activeColor: const Color(0xFF00968A),
+                                    activeColor: Colors.blueAccent,
                                   ),
                                   const Padding(
                                     padding: EdgeInsetsDirectional.fromSTEB(0, 0, 10, 0),
@@ -712,7 +712,7 @@ class _FrmFiltroBuscaWidgetState extends State<FrmFiltroBuscaWidget>
                                         checkboxValue7 = value!;
                                       });
                                     },
-                                    activeColor: const Color(0xFF00968A),
+                                    activeColor: Colors.blueAccent,
                                   ),
                                   const Text('Eletrecista'),
                                 ],
@@ -753,7 +753,7 @@ class _FrmFiltroBuscaWidgetState extends State<FrmFiltroBuscaWidget>
                             // Navigator.pushNamed(context, '/search-results');
                           },
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: const Color(0xFF00968A),
+                            backgroundColor: Colors.blueAccent,
                             foregroundColor: Colors.white,
                             minimumSize: const Size(230, 50),
                             elevation: 3,
@@ -793,7 +793,7 @@ class _FrmFiltroBuscaWidgetState extends State<FrmFiltroBuscaWidget>
             onChanged: (value) {
               onChanged(value!, toolValue);
             },
-            activeColor: const Color(0xFF00968A),
+            activeColor: Colors.blueAccent,
           ),
         ),
         Text(skillName),
@@ -803,7 +803,7 @@ class _FrmFiltroBuscaWidgetState extends State<FrmFiltroBuscaWidget>
           onChanged: (value) {
             onChanged(skillValue, value!);
           },
-          activeColor: const Color(0xFF00968A),
+          activeColor: Colors.blueAccent,
         ),
         const Padding(
           padding: EdgeInsetsDirectional.fromSTEB(0, 0, 20, 0),
