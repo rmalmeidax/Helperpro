@@ -79,10 +79,10 @@ class _FrmPesquisaAbaListaWidgetState
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.teal[300],
+      backgroundColor: Colors.white,
       appBar: AppBar(
         title: const Text("Luiz Fernando Tile"),
-        backgroundColor: Colors.teal[700],
+        backgroundColor: Colors.blueAccent,
         elevation: 0,
       ),
       body: Padding(
@@ -101,7 +101,7 @@ class _FrmPesquisaAbaListaWidgetState
                 itemBuilder: (context, index) {
                   final item = _items[index];
                   return Card(
-                    color: Colors.black87,
+                    color: Colors.blueAccent,
                     margin: const EdgeInsets.symmetric(vertical: 6),
                     child: ListTile(
                       leading: const Icon(Icons.work, color: Colors.white),

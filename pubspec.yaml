@@ -38,6 +38,10 @@ dependencies:
   flutter_rating_bar: ^4.0.1
   google_maps_flutter: ^2.3.0
 
+  flutter_localizations:
+    sdk: flutter
+  intl: ^0.19.0
+
   flutter:
     sdk: flutter
 
@@ -67,13 +71,17 @@ dev_dependencies:
 # The following section is specific to Flutter packages.
 flutter:
 
+    uses-material-design: true
+    generate: true # <-- Esta linha ativa a geração de localização
+
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
   # the material Icons class.
-  uses-material-design: true
+  #uses-material-design: true
 
+    assets:
 
-  assets:
+    - lib/l10n/ # Certifique-se de que o diretório de assets também esteja listado se usar assets
     - assets/esespro.jpeg
     - assets/logo.jpeg
     #- assets/profissionais/
@@ -108,3 +116,11 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
+
+
+flutter_intl: # Esta é a configu  ração do flutter_intl, se você estiver usando.
+  enabled: true
+  main_locale: en # ou pt
+  arb_dir: lib/l10n # <-- VERIFIQUE ESTE CAMINHO
+  output_dir: lib/gen erated
+  plural_rules: # Se você tiver regras de pluralização customizadas

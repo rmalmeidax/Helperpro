@@ -18,7 +18,7 @@ class _FrmBuscaMapWidgetState extends State<FrmBuscaMapWidget>
   late TabController _tabController;
   GoogleMapController? _mapController;
 
-  LatLng _currentPosition = const LatLng(-23.55052, -46.633308); // São Paulo como padrão
+  LatLng _currentPosition = const LatLng(-23.55052, -46.633308); // São Paulo
   Set<Marker> _markers = <Marker>{};
   bool _locationLoaded = false;
   bool _isLoadingLocation = true;
@@ -46,26 +46,21 @@ class _FrmBuscaMapWidgetState extends State<FrmBuscaMapWidget>
   }
 
   Future<void> _initializeApp() async {
-    // Primeiro carrega os marcadores com a posição padrão
     _createMarkers();
-
     setState(() {
       _locationLoaded = true;
     });
-
-    // Depois tenta obter a localização real
     await _determinePosition();
   }
 
   void _createMarkers() {
-    const double latIncrement = 0.005; // Menor incremento para melhor visualização
+    const double latIncrement = 0.005;
     const double lngIncrement = 0.005;
 
     _markers = _items.asMap().entries.map((entry) {
       int index = entry.key;
       Map<String, dynamic> item = entry.value;
 
-      // Calcular posições diferentes para cada marcador
       LatLng markerPosition = LatLng(
         _currentPosition.latitude + (index * latIncrement),
         _currentPosition.longitude + (index * lngIncrement),
@@ -77,16 +72,12 @@ class _FrmBuscaMapWidgetState extends State<FrmBuscaMapWidget>
         infoWindow: InfoWindow(
           title: item['name'],
           snippet: '${item['type']} - ⭐ ${item['rating']}',
-          onTap: () {
-            _showLocationDetails(item);
-          },
+          onTap: () => _showLocationDetails(item),
         ),
         icon: BitmapDescriptor.defaultMarkerWithHue(
           _getMarkerColor(item['rating']),
         ),
-        onTap: () {
-          _showLocationDetails(item);
-        },
+        onTap: () => _showLocationDetails(item),
       );
     }).toSet();
   }
@@ -122,7 +113,7 @@ class _FrmBuscaMapWidgetState extends State<FrmBuscaMapWidget>
             const SizedBox(height: 16),
             Row(
               children: [
-                Icon(Icons.place, color: Colors.blue, size: 28),
+                const Icon(Icons.place, color: Colors.blue, size: 28),
                 const SizedBox(width: 12),
                 Expanded(
                   child: Text(
@@ -187,9 +178,7 @@ class _FrmBuscaMapWidgetState extends State<FrmBuscaMapWidget>
       bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
       if (!serviceEnabled) {
         _showLocationError('Serviços de localização desabilitados');
-        setState(() {
-          _isLoadingLocation = false;
-        });
+        setState(() => _isLoadingLocation = false);
         return;
       }
 
@@ -198,18 +187,14 @@ class _FrmBuscaMapWidgetState extends State<FrmBuscaMapWidget>
         permission = await Geolocator.requestPermission();
         if (permission == LocationPermission.denied) {
           _showLocationError('Permissão de localização negada');
-          setState(() {
-            _isLoadingLocation = false;
-          });
+          setState(() => _isLoadingLocation = false);
           return;
         }
       }
 
       if (permission == LocationPermission.deniedForever) {
         _showLocationError('Permissão de localização negada permanentemente');
-        setState(() {
-          _isLoadingLocation = false;
-        });
+        setState(() => _isLoadingLocation = false);
         return;
       }
 
@@ -224,10 +209,7 @@ class _FrmBuscaMapWidgetState extends State<FrmBuscaMapWidget>
           _isLoadingLocation = false;
         });
 
-        // Recriar marcadores com nova posição
         _createMarkers();
-
-        // Animar câmera para nova posição
         _mapController?.animateCamera(
           CameraUpdate.newLatLng(_currentPosition),
         );
@@ -235,9 +217,7 @@ class _FrmBuscaMapWidgetState extends State<FrmBuscaMapWidget>
     } catch (e) {
       debugPrint('Erro ao obter localização: $e');
       _showLocationError('Erro ao obter localização: $e');
-      setState(() {
-        _isLoadingLocation = false;
-      });
+      setState(() => _isLoadingLocation = false);
     }
   }
 
@@ -274,7 +254,6 @@ class _FrmBuscaMapWidgetState extends State<FrmBuscaMapWidget>
         builder: (context) => const FrmPesquisaAbaListaWidget(),
       ),
     ).then((_) {
-      // Quando voltar da tela de pesquisa, pode recarregar os dados
       setState(() {
         _cadastroCounter++;
       });
@@ -301,16 +280,10 @@ class _FrmBuscaMapWidgetState extends State<FrmBuscaMapWidget>
           color: Colors.blueAccent,
           child: ListTile(
             leading: const Icon(Icons.place, color: Colors.white),
-            title: Text(
-                item['name'],
-                style: const TextStyle(color: Colors.white)
-            ),
+            title: Text(item['name'], style: const TextStyle(color: Colors.white)),
             subtitle: Row(
               children: [
-                Text(
-                    item['type'],
-                    style: const TextStyle(color: Colors.white70)
-                ),
+                Text(item['type'], style: const TextStyle(color: Colors.white70)),
                 const SizedBox(width: 10),
                 Row(
                   children: List.generate(
@@ -360,18 +333,13 @@ class _FrmBuscaMapWidgetState extends State<FrmBuscaMapWidget>
           myLocationEnabled: true,
           myLocationButtonEnabled: true,
           compassEnabled: true,
-          mapToolbarEnabled: false, // Remove toolbar para melhor UX
-          zoomControlsEnabled: false, // Remove controles de zoom padrão
-          onMapCreated: (GoogleMapController controller) {
+          mapToolbarEnabled: false,
+          zoomControlsEnabled: false,
+          onMapCreated: (controller) {
             _mapController = controller;
           },
           markers: _markers,
-          onTap: (LatLng position) {
-            debugPrint('Mapa tocado em: ${position.latitude}, ${position.longitude}');
-          },
         ),
-
-        // Indicador de carregamento de localização
         if (_isLoadingLocation)
           Positioned(
             top: 16,
@@ -382,21 +350,19 @@ class _FrmBuscaMapWidgetState extends State<FrmBuscaMapWidget>
                 padding: const EdgeInsets.all(12),
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
-                  children: [
+                  children: const [
                     SizedBox(
                       width: 20,
                       height: 20,
                       child: CircularProgressIndicator(strokeWidth: 2),
                     ),
-                    const SizedBox(width: 12),
-                    const Text('Obtendo localização...'),
+                    SizedBox(width: 12),
+                    Text('Obtendo localização...'),
                   ],
                 ),
               ),
             ),
           ),
-
-        // Botão de localização personalizado
         Positioned(
           bottom: 16,
           right: 16,
@@ -407,7 +373,7 @@ class _FrmBuscaMapWidgetState extends State<FrmBuscaMapWidget>
                 mini: true,
                 onPressed: _determinePosition,
                 backgroundColor: Colors.white,
-                child: Icon(Icons.my_location, color: Colors.black12),
+                child: const Icon(Icons.my_location, color: Colors.black87),
               ),
               const SizedBox(height: 8),
               FloatingActionButton(
@@ -417,7 +383,7 @@ class _FrmBuscaMapWidgetState extends State<FrmBuscaMapWidget>
                   _mapController?.animateCamera(CameraUpdate.zoomIn());
                 },
                 backgroundColor: Colors.white,
-                child: Icon(Icons.add, color: Colors.black12),
+                child: const Icon(Icons.add, color: Colors.black87),
               ),
               const SizedBox(height: 8),
               FloatingActionButton(
@@ -427,7 +393,7 @@ class _FrmBuscaMapWidgetState extends State<FrmBuscaMapWidget>
                   _mapController?.animateCamera(CameraUpdate.zoomOut());
                 },
                 backgroundColor: Colors.white,
-                child: Icon(Icons.remove, color: Colors.black12),
+                child: const Icon(Icons.remove, color: Colors.black87),
               ),
             ],
           ),
@@ -444,10 +410,12 @@ class _FrmBuscaMapWidgetState extends State<FrmBuscaMapWidget>
         backgroundColor: Colors.blueAccent,
         foregroundColor: Colors.white,
         elevation: 0,
-        leading: IconButton(
-          icon: const Icon(Icons.filter_list, color: Colors.white),
-          onPressed: _abrirFiltro,
-        ),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.filter_list, color: Colors.white),
+            onPressed: _abrirFiltro,
+          ),
+        ],
         bottom: TabBar(
           controller: _tabController,
           indicatorColor: Colors.white,
