@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:helperpro/registros/FrmBuscaMapWidget.dart';
+import 'package:helperpro/registros/FrmFiltroBuscaWidget.dart';
 import 'package:helperpro/registros/FrmRegistroAgendaWidget.dart';
 import 'package:helperpro/registros/FrmRegistroProfissionalWidget.dart';
 import 'FrmBuscaMapWidget.dart';
@@ -22,15 +23,15 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
       ),
       // Se você quer iniciar direto com FrmRegistroProfissionalWidget:
-      //home: const FrmBuscaMapWidget(),
+      home: const FrmBuscaMapWidget(),
 
       // Rotas futuras
       routes: {
-         '/': (context) => const FrmLoginWidget(title: "Welcome Helper"),
-        '/frmPrincipalWidget': (context) => const FrmPrincipalWidget(),
-         '/frmCadastroCliente': (context) => const FrmCadastroCliente(),
-          '/frmRegistroAgendaWidget': (context) => const FrmRegistroAgendaWidget(),
-          '/frmBuscaMapWidget': (context) => const FrmBuscaMapWidget(),
+      //   '/': (context) => const FrmLoginWidget(title: "Welcome Helper"),
+      //   '/frmPrincipalWidget': (context) => const FrmPrincipalWidget(),
+      //   '/frmCadastroCliente': (context) => const FrmCadastroCliente(),
+      //   '/frmRegistroAgendaWidget': (context) => const FrmRegistroAgendaWidget(),
+      //   '/frmBuscaMapWidget': (context) => const FrmBuscaMapWidget(),
 
 
 
